@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	"fmt"
 	"time"
 
 	gogotypes "github.com/gogo/protobuf/types"
@@ -155,4 +156,18 @@ func (k Keeper) clearValidatorMissedBlockBitArray(ctx sdk.Context, address sdk.C
 	for ; iter.Valid(); iter.Next() {
 		store.Delete(iter.Key())
 	}
+}
+
+// RevertTombstone attempts to revert a tombstone state of a validator.
+// Panics if signing info for the given validator does not exist.
+func (k Keeper) RevertTombstone(ctx sdk.Context, consAddr sdk.ConsAddress) {
+	signInfo, ok := k.GetValidatorSigningInfo(ctx, consAddr)
+	if !ok {
+		panic(fmt.Sprintf("cannot tombstone validator that does not have any signing information: %s", consAddr.String()))
+	}
+	if !signInfo.Tombstoned {
+		panic(fmt.Sprintf("cannot untombstone a validator that is not tombstoned: %s", consAddr.String()))
+	}
+	signInfo.Tombstoned = false
+	k.SetValidatorSigningInfo(ctx, consAddr, signInfo)
 }

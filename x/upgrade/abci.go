@@ -24,8 +24,8 @@ func BeginBlocker(k keeper.Keeper, ctx sdk.Context, _ abci.RequestBeginBlock) {
 	defer telemetry.ModuleMeasureSince(types.ModuleName, time.Now(), telemetry.MetricKeyBeginBlocker)
 
 	plan, found := k.GetUpgradePlan(ctx)
-	fmt.Println("plan, found", plan, found)
-	ctx.Logger().Info("plan, found", plan, found)
+	// fmt.Println("plan, found", plan, found)
+	// ctx.Logger().Info("plan, found", plan, found)
 
 	if !k.DowngradeVerified() {
 		k.SetDowngradeVerified(true)

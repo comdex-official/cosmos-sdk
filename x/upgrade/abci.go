@@ -50,7 +50,8 @@ func BeginBlocker(k keeper.Keeper, ctx sdk.Context, _ abci.RequestBeginBlock) {
 					appVersion = cp.Version.AppVersion
 				}
 
-				panic(fmt.Sprintf("Wrong app version %d, upgrade handler is missing for %s upgrade plan", appVersion, lastAppliedPlan))
+				// panic(fmt.Sprintf("Wrong app version %d, upgrade handler is missing for %s upgrade plan", appVersion, lastAppliedPlan))
+				fmt.Println("Wrong app version, upgrade handler is missing for upgrade plan", appVersion, lastAppliedPlan)
 			}
 		}
 	}

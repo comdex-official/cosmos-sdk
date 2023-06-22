@@ -327,6 +327,7 @@ func (k Keeper) setDone(ctx sdk.Context, name string) {
 // HasHandler returns true iff there is a handler registered for this name
 func (k Keeper) HasHandler(name string) bool {
 	_, ok := k.upgradeHandlers[name]
+	fmt.Println("k.upgradeHandlers", k.upgradeHandlers)
 	return ok
 }
 

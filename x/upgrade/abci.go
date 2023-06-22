@@ -38,18 +38,16 @@ func BeginBlocker(k keeper.Keeper, ctx sdk.Context, _ abci.RequestBeginBlock) {
 		if !found || !plan.ShouldExecute(ctx) || (plan.ShouldExecute(ctx) && k.IsSkipHeight(ctx.BlockHeight())) {
 			if lastAppliedPlan != "" && !k.HasHandler(lastAppliedPlan) {
 				fmt.Println("lastAppliedPlan", lastAppliedPlan)
+				fmt.Println("!k.HasHandler(lastAppliedPlan)", !k.HasHandler(lastAppliedPlan))
 				fmt.Println("consensus before")
 				fmt.Println("ctx.ConsensusParams().Version.Block", ctx.ConsensusParams().Block)
 				fmt.Println("ctx.ConsensusParams().Version.AppVersion", ctx.ConsensusParams().Version.AppVersion)
 				fmt.Println("consensus after")
-				ctx.Logger().Info("lastAppliedPlan", lastAppliedPlan)
-				ctx.Logger().Info("ctx.ConsensusParams().Version.AppVersion", ctx.ConsensusParams().Version.AppVersion)
 				panic(fmt.Sprintf("Wrong app version %d, upgrade handler is missing for %s upgrade plan", ctx.ConsensusParams().Version.AppVersion, lastAppliedPlan))
 			}
 		}
 	}
 	fmt.Println("out of scope")
-	ctx.Logger().Info("out of scope")
 
 	if !found {
 		return

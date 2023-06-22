@@ -43,7 +43,14 @@ func BeginBlocker(k keeper.Keeper, ctx sdk.Context, _ abci.RequestBeginBlock) {
 				fmt.Println("ctx.ConsensusParams().Version.Block", ctx.ConsensusParams().Block)
 				fmt.Println("ctx.ConsensusParams().Version.AppVersion", ctx.ConsensusParams().Version.AppVersion)
 				fmt.Println("consensus after")
-				panic(fmt.Sprintf("Wrong app version %d, upgrade handler is missing for %s upgrade plan", ctx.ConsensusParams().Version.AppVersion, lastAppliedPlan))
+				var appVersion uint64
+
+				cp := ctx.ConsensusParams()
+				if cp != nil && cp.Version != nil {
+					appVersion = cp.Version.AppVersion
+				}
+
+				panic(fmt.Sprintf("Wrong app version %d, upgrade handler is missing for %s upgrade plan", appVersion, lastAppliedPlan))
 			}
 		}
 	}

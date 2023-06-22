@@ -41,7 +41,7 @@ func BeginBlocker(k keeper.Keeper, ctx sdk.Context, _ abci.RequestBeginBlock) {
 				fmt.Println("!k.HasHandler(lastAppliedPlan)", !k.HasHandler(lastAppliedPlan))
 				fmt.Println("consensus before")
 				fmt.Println("ctx.ConsensusParams().Version.Block", ctx.ConsensusParams().Block)
-				fmt.Println("ctx.ConsensusParams().Version.AppVersion", ctx.ConsensusParams().Version.AppVersion)
+				// fmt.Println("ctx.ConsensusParams().Version.AppVersion", ctx.ConsensusParams().Version.AppVersion)
 				fmt.Println("consensus after")
 				var appVersion uint64
 

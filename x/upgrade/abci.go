@@ -24,6 +24,8 @@ func BeginBlocker(k keeper.Keeper, ctx sdk.Context, _ abci.RequestBeginBlock) {
 	defer telemetry.ModuleMeasureSince(types.ModuleName, time.Now(), telemetry.MetricKeyBeginBlocker)
 
 	plan, found := k.GetUpgradePlan(ctx)
+	fmt.Println("plan, found", plan, found)
+	ctx.Logger().Info("plan, found", plan, found)
 
 	if !k.DowngradeVerified() {
 		k.SetDowngradeVerified(true)
@@ -35,10 +37,16 @@ func BeginBlocker(k keeper.Keeper, ctx sdk.Context, _ abci.RequestBeginBlock) {
 		// 3. If the plan is ready and skip upgrade height is set for current height.
 		if !found || !plan.ShouldExecute(ctx) || (plan.ShouldExecute(ctx) && k.IsSkipHeight(ctx.BlockHeight())) {
 			if lastAppliedPlan != "" && !k.HasHandler(lastAppliedPlan) {
+				fmt.Println("lastAppliedPlan", lastAppliedPlan)
+				fmt.Println("ctx.ConsensusParams().Version.AppVersion", ctx.ConsensusParams().Version.AppVersion)
+				ctx.Logger().Info("lastAppliedPlan", lastAppliedPlan)
+				ctx.Logger().Info("ctx.ConsensusParams().Version.AppVersion", ctx.ConsensusParams().Version.AppVersion)
 				panic(fmt.Sprintf("Wrong app version %d, upgrade handler is missing for %s upgrade plan", ctx.ConsensusParams().Version.AppVersion, lastAppliedPlan))
 			}
 		}
 	}
+	fmt.Println("out of scope")
+	ctx.Logger().Info("out of scope")
 
 	if !found {
 		return

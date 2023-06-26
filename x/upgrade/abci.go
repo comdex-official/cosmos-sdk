@@ -25,6 +25,10 @@ func BeginBlocker(k keeper.Keeper, ctx sdk.Context, _ abci.RequestBeginBlock) {
 
 	plan, found := k.GetUpgradePlan(ctx)
 
+	if !found {
+		return
+	}
+
 	if !k.DowngradeVerified() {
 		k.SetDowngradeVerified(true)
 		lastAppliedPlan, _ := k.GetLastCompletedUpgrade(ctx)
@@ -38,10 +42,6 @@ func BeginBlocker(k keeper.Keeper, ctx sdk.Context, _ abci.RequestBeginBlock) {
 				panic(fmt.Sprintf("Wrong app version %d, upgrade handler is missing for %s upgrade plan", ctx.ConsensusParams().Version.AppVersion, lastAppliedPlan))
 			}
 		}
-	}
-
-	if !found {
-		return
 	}
 
 	// To make sure clear upgrade is executed at the same block
